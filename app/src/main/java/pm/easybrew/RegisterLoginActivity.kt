@@ -1,11 +1,13 @@
 package pm.easybrew
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.edit
 import androidx.lifecycle.lifecycleScope
 import com.google.gson.Gson
 import kotlinx.coroutines.launch
@@ -43,10 +45,23 @@ class RegisterLoginActivity : AppCompatActivity() {
         findViewById<Button>(R.id.btnLogin).setOnClickListener {
             val email = findViewById<EditText>(R.id.editEmail).text.toString()
             val password = findViewById<EditText>(R.id.editPassword).text.toString()
+            var jwt: String = ""
             lifecycleScope.launch {
                 try {
                     val response = RetrofitClient.api.login(LoginRequest(email, password))
-                    Toast.makeText(applicationContext, getMessage(response), Toast.LENGTH_LONG).show()
+                    if (response.isSuccessful) {
+                        Toast.makeText(applicationContext, getMessage(response), Toast.LENGTH_LONG).show()
+
+                        val intent = Intent(applicationContext, MainActivity::class.java)
+                        // intent.putExtra("jwt", response.body()?.jwt.toString())
+                        val sharedPref = getSharedPreferences("easybrew_session", MODE_PRIVATE)
+                        sharedPref.edit {
+                            putString("token", response.body()?.jwt.toString())
+                        }
+                        startActivity(intent)
+                    } else {
+                        Toast.makeText(applicationContext, getMessage(response), Toast.LENGTH_LONG).show()
+                    }
                 } catch (e: IOException) {
                     Toast.makeText(applicationContext, "Network error", Toast.LENGTH_LONG).show()
                 } catch (e: Exception) {
