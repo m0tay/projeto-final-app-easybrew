@@ -15,17 +15,41 @@ import pm.easybrew.api.RetrofitClient
 import pm.easybrew.objects.JWTResponse
 import pm.easybrew.objects.LoginRequest
 import pm.easybrew.objects.RegisterRequest
+import pm.easybrew.objects.ValidateTokenRequest
 import retrofit2.Response
 import java.io.IOException
 
 class RegisterLoginActivity : AppCompatActivity() {
 
-    private val gson = Gson()
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_register_login)
+
+        val sharedPref = getSharedPreferences("easybrew_session", MODE_PRIVATE)
+        val token = sharedPref.getString("token", null)
+
+        if (token != null) {
+            lifecycleScope.launch {
+                try {
+                    val response = RetrofitClient.api.validateToken(ValidateTokenRequest(token))
+                    if (response.isSuccessful) {
+                        Toast.makeText(
+                            applicationContext, getMessage(response), Toast.LENGTH_LONG
+                        ).show()
+                        val intent = Intent(applicationContext, MainActivity::class.java)
+                        startActivity(intent)
+                    } else {
+                        Toast.makeText(applicationContext, getMessage(response), Toast.LENGTH_LONG)
+                            .show()
+                    }
+                } catch (e: Exception) {
+                    Toast.makeText(
+                        applicationContext, e.message ?: "Unknown error", Toast.LENGTH_LONG
+                    ).show()
+                }
+            }
+        }
 
         findViewById<Button>(R.id.btnRegister).setOnClickListener {
             val email = findViewById<EditText>(R.id.editEmail).text.toString()
@@ -33,11 +57,14 @@ class RegisterLoginActivity : AppCompatActivity() {
             lifecycleScope.launch {
                 try {
                     val response = RetrofitClient.api.register(RegisterRequest(email, password))
-                    Toast.makeText(applicationContext, getMessage(response), Toast.LENGTH_LONG).show()
+                    Toast.makeText(applicationContext, getMessage(response), Toast.LENGTH_LONG)
+                        .show()
                 } catch (e: IOException) {
                     Toast.makeText(applicationContext, "Network error", Toast.LENGTH_LONG).show()
                 } catch (e: Exception) {
-                    Toast.makeText(applicationContext, e.message ?: "Unknown error", Toast.LENGTH_LONG).show()
+                    Toast.makeText(
+                        applicationContext, e.message ?: "Unknown error", Toast.LENGTH_LONG
+                    ).show()
                 }
             }
         }
@@ -50,22 +77,26 @@ class RegisterLoginActivity : AppCompatActivity() {
                 try {
                     val response = RetrofitClient.api.login(LoginRequest(email, password))
                     if (response.isSuccessful) {
-                        Toast.makeText(applicationContext, getMessage(response), Toast.LENGTH_LONG).show()
+                        Toast.makeText(applicationContext, getMessage(response), Toast.LENGTH_LONG)
+                            .show()
 
                         val intent = Intent(applicationContext, MainActivity::class.java)
                         // intent.putExtra("jwt", response.body()?.jwt.toString())
                         val sharedPref = getSharedPreferences("easybrew_session", MODE_PRIVATE)
                         sharedPref.edit {
                             putString("token", response.body()?.jwt.toString())
-                        }
+                       }
                         startActivity(intent)
                     } else {
-                        Toast.makeText(applicationContext, getMessage(response), Toast.LENGTH_LONG).show()
+                        Toast.makeText(applicationContext, getMessage(response), Toast.LENGTH_LONG)
+                            .show()
                     }
                 } catch (e: IOException) {
                     Toast.makeText(applicationContext, "Network error", Toast.LENGTH_LONG).show()
                 } catch (e: Exception) {
-                    Toast.makeText(applicationContext, e.message ?: "Unknown error", Toast.LENGTH_LONG).show()
+                    Toast.makeText(
+                        applicationContext, e.message ?: "Unknown error", Toast.LENGTH_LONG
+                    ).show()
                 }
             }
         }
@@ -76,7 +107,11 @@ class RegisterLoginActivity : AppCompatActivity() {
             response.body()?.message?.takeIf { !it.isNullOrBlank() } ?: "OK"
         } else {
             val raw = response.errorBody()?.string().orEmpty()
-            val parsed = runCatching { gson.fromJson(raw, JWTResponse::class.java) }.getOrNull()
+            val parsed = runCatching {
+                Gson().fromJson(
+                    raw, JWTResponse::class.java
+                )
+            }.getOrNull()
             parsed?.message?.takeIf { !it.isNullOrBlank() }
                 ?: raw.ifBlank { "${response.code()} ${response.message()}" }
         }

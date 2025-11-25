@@ -2,13 +2,13 @@ package pm.easybrew
 
 import android.content.Context.MODE_PRIVATE
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import android.widget.TextView
 import androidx.fragment.app.Fragment
+import pm.easybrew.databinding.FragmentScanQrCodeBinding
 
-class ScanQRCodeFragment : Fragment() {
+class ScanQRCodeFragment : Fragment(R.layout.fragment_scan_qr_code) {
+
+    private lateinit var binding: FragmentScanQrCodeBinding
 
     private var token: String? = null
 
@@ -20,14 +20,11 @@ class ScanQRCodeFragment : Fragment() {
             .getString("token", null)
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View = inflater.inflate(R.layout.fragment_scan_qr_code, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        binding = FragmentScanQrCodeBinding.bind(view)
 
-        view.findViewById<TextView>(R.id.scanTextView).text = "Menu $token"
+//        view.findViewById<TextView>(R.id.scanTextView).text = "Menu $token"
+        binding.scanTextView.text = "Menu $token"
     }
 }
