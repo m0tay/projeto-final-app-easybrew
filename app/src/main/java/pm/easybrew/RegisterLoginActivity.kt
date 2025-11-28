@@ -2,6 +2,7 @@ package pm.easybrew
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
@@ -39,7 +40,9 @@ class RegisterLoginActivity : AppCompatActivity() {
                         ).show()
                         val intent = Intent(applicationContext, MainActivity::class.java)
                         startActivity(intent)
+                        finish()
                     } else {
+                        Log.i("Error at trying to validate token", getMessage(response))
                         Toast.makeText(applicationContext, getMessage(response), Toast.LENGTH_LONG)
                             .show()
                     }
@@ -50,6 +53,8 @@ class RegisterLoginActivity : AppCompatActivity() {
                 }
             }
         }
+
+        // dar finish à atividade
 
         findViewById<Button>(R.id.btnRegister).setOnClickListener {
             val email = findViewById<EditText>(R.id.editEmail).text.toString()
@@ -87,6 +92,7 @@ class RegisterLoginActivity : AppCompatActivity() {
                             putString("token", response.body()?.jwt.toString())
                        }
                         startActivity(intent)
+                        finish()
                     } else {
                         Toast.makeText(applicationContext, getMessage(response), Toast.LENGTH_LONG)
                             .show()
