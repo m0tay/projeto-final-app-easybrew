@@ -18,6 +18,8 @@ class AccountFragment : Fragment() {
         token = requireContext()
             .getSharedPreferences("easybrew_session", MODE_PRIVATE)
             .getString("token", null)
+//
+//        requireContext().deleteSharedPreferences("easybrew_session")
     }
 
     override fun onCreateView(
