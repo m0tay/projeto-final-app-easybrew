@@ -31,6 +31,8 @@ class ScanQRCodeFragment : Fragment(R.layout.fragment_scan_qr_code) {
 
     private var token: String? = null
 
+    private var machineId: String? = null
+
     private lateinit var cameraExecutor: ExecutorService
     private var camera: Camera? = null
 
@@ -167,17 +169,23 @@ class ScanQRCodeFragment : Fragment(R.layout.fragment_scan_qr_code) {
         requireActivity().runOnUiThread {
             binding.scanTextView.text = "Scanned: $qrCodeValue"
 
-            Toast.makeText(
-                requireContext(),
-                "QR Code: $qrCodeValue",
-                Toast.LENGTH_SHORT
-            ).show()
+            // Toast.makeText(
+            //     requireContext(),
+            //     "QR Code: $qrCodeValue",
+            //     Toast.LENGTH_SHORT
+            // ).show()
+
+            val fragment = RecyclerViewMenuFragment().apply {
+                arguments = Bundle().apply {
+                    putString("machineId", qrCodeValue)
+                }
+            }
 
             // Navigate to menu after scan
-            // requireActivity().supportFragmentManager.beginTransaction()
-            //     .replace(R.id.frameLayout, RecyclerViewMenuFragment())
-            //     .addToBackStack(null)
-            //     .commit()
+             requireActivity().supportFragmentManager.beginTransaction()
+                 .replace(R.id.frameLayout, fragment)
+                 .addToBackStack(null)
+                 .commit()
         }
     }
 
