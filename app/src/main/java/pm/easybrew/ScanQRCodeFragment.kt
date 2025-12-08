@@ -165,15 +165,21 @@ class ScanQRCodeFragment : Fragment(R.layout.fragment_scan_qr_code) {
     }
 
     private fun handleQRCode(qrCodeValue: String) {
-        // Update UI on main thread
-        requireActivity().runOnUiThread {
+        // Check if fragment is still attached before proceeding
+        if (!isAdded) {
+            return
+        }
+        
+        val activity = activity ?: return
+        
+        activity.runOnUiThread {
+            // Double-check attachment on UI thread
+            if (!isAdded) {
+                return@runOnUiThread
+            }
+            
             binding.scanTextView.text = "Scanned: $qrCodeValue"
-
-            // Toast.makeText(
-            //     requireContext(),
-            //     "QR Code: $qrCodeValue",
-            //     Toast.LENGTH_SHORT
-            // ).show()
+            Log.d(TAG, "QR Code detected: $qrCodeValue")
 
             val fragment = RecyclerViewMenuFragment().apply {
                 arguments = Bundle().apply {
@@ -181,11 +187,12 @@ class ScanQRCodeFragment : Fragment(R.layout.fragment_scan_qr_code) {
                 }
             }
 
+            activity.supportFragmentManager.popBackStackImmediate()
+
             // Navigate to menu after scan
-             requireActivity().supportFragmentManager.beginTransaction()
-                 .replace(R.id.frameLayout, fragment)
-                 .addToBackStack(null)
-                 .commit()
+            activity.supportFragmentManager.beginTransaction()
+                .replace(R.id.frameLayout, fragment)
+                .commit()
         }
     }
 

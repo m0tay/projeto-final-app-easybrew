@@ -42,7 +42,11 @@ class RecyclerViewMenuFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_recycler_view_menu, container, false)
         machineId = arguments?.getString("machineId") ?: ""
 
-        setupRecycler(view)
+        // Setup RecyclerView
+        val rv = view.findViewById<RecyclerView>(R.id.recyclerViewMenu)
+        rv?.layoutManager = LinearLayoutManager(requireContext())
+        adapter = BeveragesAdapter(beverages)
+        rv?.adapter = adapter
 
         if (machineId.isNotEmpty()) {
             loadMenu(machineId)
@@ -51,17 +55,6 @@ class RecyclerViewMenuFragment : Fragment() {
         }
 
         return view
-    }
-
-    private fun setupRecycler(view: View) {
-        val rv = view.findViewById<RecyclerView>(R.id.recyclerViewMenu)
-            ?: run {
-                Toast.makeText(requireContext(), "RecyclerView not found (check id)", Toast.LENGTH_LONG).show()
-                return
-            }
-        rv.layoutManager = LinearLayoutManager(requireContext())
-        adapter = BeveragesAdapter(beverages)
-        rv.adapter = adapter
     }
 
     private fun loadMenu(machineId: String) {
