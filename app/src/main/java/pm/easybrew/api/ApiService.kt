@@ -2,6 +2,8 @@ package pm.easybrew.api
 
 import pm.easybrew.objects.JWTResponse
 import pm.easybrew.objects.LoginRequest
+import pm.easybrew.objects.MenuRequest
+import pm.easybrew.objects.MenuResponse
 import pm.easybrew.objects.RegisterRequest
 import pm.easybrew.objects.ValidateTokenRequest
 import retrofit2.Response
@@ -17,4 +19,7 @@ interface ApiService {
 
     @POST("auth/validate_token.php")
     suspend fun validateToken(@Body request: ValidateTokenRequest): Response<JWTResponse>
+
+    @POST("machines/menu.php")
+    suspend fun menu(@Body request: MenuRequest): Response<MenuResponse>
 }
