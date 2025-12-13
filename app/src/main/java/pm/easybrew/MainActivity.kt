@@ -5,22 +5,24 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.gson.Gson
 import pm.easybrew.databinding.ActivityMainBinding
-import pm.easybrew.models.Beverage
+import pm.easybrew.objects.Beverage
 
 class MainActivity : AppCompatActivity() {
     private val binding by lazy {
         ActivityMainBinding.inflate(layoutInflater)
     }
 
-    private val gson = Gson()
-
     companion object {
         private const val CACHE_TTL_MS = 10 * 60 * 1000L // 10 minutes
+        private const val CACHE_KEY = "last_menu_cache"
+        private const val CACHE_MACHINE_ID_KEY = "last_machine_id"
+        private lateinit var nav: BottomNavigationView
     }
 
-    private data class CachedMenu(val timestamp: Long, val records: List<Beverage>)
+    private data class CachedMenu(val timestamp: Long, val machineId: String, val records: List<Beverage>)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,7 +36,7 @@ class MainActivity : AppCompatActivity() {
 
         if (savedInstanceState == null) {
             // valid menu cache?
-            val cachedMachineId = getLatestCachedMachineId()
+            val cachedMachineId = getCachedMachineId()
             if (cachedMachineId != null) {
                 openRecyclerViewMenu(cachedMachineId)
             } else {
@@ -42,11 +44,13 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        binding.bottomNavigationView.setOnItemSelectedListener { item ->
+        nav = binding.bottomNavigationView
+
+        nav.setOnItemSelectedListener { item ->
             val fragment = when (item.itemId) {
                 R.id.navigation_menu -> {
                     // Check cache first
-                    val cachedMachineId = getLatestCachedMachineId()
+                    val cachedMachineId = getCachedMachineId()
                     if (cachedMachineId != null) {
                         RecyclerViewMenuFragment().apply {
                             arguments = Bundle().apply {
@@ -87,29 +91,21 @@ class MainActivity : AppCompatActivity() {
             .commit()
     }
 
-    private fun getLatestCachedMachineId(): String? {
+    private fun getCachedMachineId(): String? {
         val sharedPref = getSharedPreferences("easybrew_session", MODE_PRIVATE)
-        val allKeys = sharedPref.all.keys.filter { it.startsWith("menu_cache_") }
-
-        var latestMachineId: String? = null
-        var latestTimestamp = 0L
-
-        for (key in allKeys) {
-            val raw = sharedPref.getString(key, null) ?: continue
-            val cached = try {
-                gson.fromJson(raw, CachedMenu::class.java)
-            } catch (_: Exception) {
-                continue
-            }
-
-            if (System.currentTimeMillis() - cached.timestamp <= CACHE_TTL_MS) {
-                if (cached.timestamp > latestTimestamp) {
-                    latestTimestamp = cached.timestamp
-                    latestMachineId = key.removePrefix("menu_cache_")
-                }
-            }
+        val raw = sharedPref.getString(CACHE_KEY, null) ?: return null
+        
+        val cached = try {
+            Gson().fromJson(raw, CachedMenu::class.java)
+        } catch (_: Exception) {
+            return null
         }
 
-        return latestMachineId
+        // Check if cache is still valid
+        return if (System.currentTimeMillis() - cached.timestamp <= CACHE_TTL_MS) {
+            cached.machineId
+        } else {
+            null
+        }
     }
 }

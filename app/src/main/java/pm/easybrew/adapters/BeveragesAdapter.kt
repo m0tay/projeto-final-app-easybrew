@@ -10,7 +10,7 @@ import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import pm.easybrew.R
-import pm.easybrew.models.Beverage
+import pm.easybrew.objects.Beverage
 
 class BeveragesAdapter(val beverages: ArrayList<Beverage>): RecyclerView
     .Adapter<BeveragesAdapter.ViewHolder>() {
