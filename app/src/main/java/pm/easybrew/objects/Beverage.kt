@@ -1,4 +1,4 @@
-package pm.easybrew.models
+package pm.easybrew.objects
 
 class Beverage {
     val id: String = ""
