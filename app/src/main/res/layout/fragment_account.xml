@@ -17,25 +17,28 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/firstNameTextView"
+            <EditText
+                android:id="@+id/firstNameEdit"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:editable="true"
-                android:text="First Name" />
+                android:ems="10"
+                android:hint="@string/first_name"
+                android:inputType="text" />
 
-            <TextView
-                android:id="@+id/lastNameTextView"
+            <EditText
+                android:id="@+id/lastNameEdit"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:editable="true"
-                android:text="Last Name" />
+                android:ems="10"
+                android:hint="@string/last_name"
+                android:inputType="text" />
 
             <EditText
                 android:id="@+id/emailEdit"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
+                android:hint="@string/email"
                 android:inputType="textEmailAddress" />
 
             <EditText
@@ -43,19 +46,20 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
+                android:hint="@string/password"
                 android:inputType="textPassword" />
 
             <Button
                 android:id="@+id/btnUpdateAccount"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Update account" />
+                android:text="@string/btn_update_account" />
         </LinearLayout>
 
         <Button
             android:id="@+id/btnLogout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Logout" />
+            android:text="@string/btn_logout" />
     </LinearLayout>
 </FrameLayout>

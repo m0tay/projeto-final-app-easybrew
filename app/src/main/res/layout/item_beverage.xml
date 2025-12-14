@@ -77,7 +77,7 @@
                 android:id="@+id/btnMake"
                 android:layout_width="120dp"
                 android:layout_height="wrap_content"
-                android:text="Preparar" />
+                android:text="@string/btn_beverage_order" />
         </LinearLayout>
     </LinearLayout>
 </androidx.cardview.widget.CardView>

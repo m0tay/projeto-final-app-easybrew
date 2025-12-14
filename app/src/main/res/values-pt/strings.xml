@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="first_name">Nome</string>
+    <string name="last_name">Sobrenome</string>
+    <string name="password">Senha</string>
+    <string name="btn_login">Entrar</string>
+    <string name="btn_logout">Sair</string>
+    <string name="btn_update_account">Atualizar conta</string>
+    <string name="btn_beverage_order">Pedir</string>
+    <string name="scan_qr_code">Ler código QR</string>
+    <string name="failed_to_start_camera">Houve uma falha ao tentar abrir a câmera</string>
+    <string name="camera_permission_is_required">É necessária permissão da câmera para ler códigos QR</string>
+    <string name="btn_register">Registrar-se</string>
+    <string name="registered_succesfully">Registrado com sucesso</string>
+    <string name="network_error">Erro de rede, verifique sua conexão</string>
+    <string name="an_error_occured">Aconteceu um erro inesperado</string>
+    <string name="nav_menu">Menu</string>
+    <string name="nav_account">Conta</string>
+    <string name="welcome">Bem-vindo</string>
+</resources>

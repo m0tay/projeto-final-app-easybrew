@@ -40,16 +40,26 @@ class RegisterLoginActivity : AppCompatActivity() {
                     val response = RetrofitClient.api.register(RegisterRequest(email, password))
                     val message = getMessage(response)
                     if (response.isSuccessful) {
-                        Toast.makeText(applicationContext, "Registration successful! Please log in.", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            applicationContext,
+                            getString(R.string.registered_succesfully),
+                            Toast.LENGTH_SHORT
+                        ).show()
                     } else {
                         Toast.makeText(applicationContext, message, Toast.LENGTH_SHORT).show()
                     }
                     Log.i(TAG, message)
                 } catch (e: IOException) {
-                    Toast.makeText(applicationContext, "Network error. Please check your connection.", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        applicationContext,
+                        getString(R.string.network_error),
+                        Toast.LENGTH_SHORT
+                    ).show()
                     Log.e(TAG, "Network error", e)
                 } catch (e: Exception) {
-                    Toast.makeText(applicationContext, "An error occurred: ${e.message}", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        applicationContext, getString(R.string.an_error_occured) +"${e.message}", Toast.LENGTH_SHORT
+                    ).show()
                     Log.e(TAG, e.message ?: "Unknown error", e)
                 }
             }
@@ -76,10 +86,16 @@ class RegisterLoginActivity : AppCompatActivity() {
                         Log.w(TAG, message)
                     }
                 } catch (e: IOException) {
-                    Toast.makeText(applicationContext, "Network error. Please check your connection.", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        applicationContext,
+                        getString(R.string.network_error),
+                        Toast.LENGTH_SHORT
+                    ).show()
                     Log.e(TAG, "Network error", e)
                 } catch (e: Exception) {
-                    Toast.makeText(applicationContext, "An error occurred: ${e.message}", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        applicationContext, getString(R.string.an_error_occured) +"${e.message}", Toast.LENGTH_SHORT
+                    ).show()
                     Log.e(TAG, e.message ?: "Unknown error", e)
                 }
             }

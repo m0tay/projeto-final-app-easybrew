@@ -18,7 +18,7 @@ object RetrofitClient {
 
     fun getMessage(response: Response<JWTResponse>): String {
         return if (response.isSuccessful) {
-            response.body()?.message?.takeIf { !it.isNullOrBlank() } ?: "OK"
+            response.body()?.message?.takeIf { it.isNotBlank() } ?: "OK"
         } else {
             val raw = response.errorBody()?.string().orEmpty()
             val parsed = runCatching {
@@ -26,7 +26,7 @@ object RetrofitClient {
                     raw, JWTResponse::class.java
                 )
             }.getOrNull()
-            parsed?.message?.takeIf { !it.isNullOrBlank() }
+            parsed?.message?.takeIf { it.isNotBlank() }
                 ?: raw.ifBlank { "${response.code()} ${response.message()}" }
         }
     }

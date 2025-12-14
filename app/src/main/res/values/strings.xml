@@ -1,5 +1,23 @@
 <resources>
-    <string name="app_name">EasyBrew</string>
+    <string name="app_name" translatable="false">EasyBrew</string>
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="hello_blank_fragment" translatable="false">Hello blank fragment</string>
+    <string name="first_name">First name</string>
+    <string name="last_name">Last name</string>
+    <string name="email" translatable="false">Email</string>
+    <string name="password">Password</string>
+    <string name="btn_login">Login</string>
+    <string name="btn_logout">Logout</string>
+    <string name="btn_update_account">Update account</string>
+    <string name="btn_beverage_order">Order</string>
+    <string name="scan_qr_code">Scan QR Code</string>
+    <string name="failed_to_start_camera">Failed to start camera</string>
+    <string name="camera_permission_is_required">Camera permission is required to scan QR codes</string>
+    <string name="btn_register">Register</string>
+    <string name="registered_succesfully">Registered successfully</string>
+    <string name="network_error">Network error, please check your connection</string>
+    <string name="an_error_occured">An error occured</string>
+    <string name="nav_menu">Menu</string>
+    <string name="nav_account">Account</string>
+    <string name="welcome">Welcome</string>
 </resources>
