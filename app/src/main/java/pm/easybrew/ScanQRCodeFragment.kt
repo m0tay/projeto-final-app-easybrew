@@ -48,8 +48,8 @@ class ScanQRCodeFragment : Fragment(R.layout.fragment_scan_qr_code) {
         } else {
             Toast.makeText(
                 requireContext(),
-                // trocar ts para i18n later
-                "Camera permission is required to scan QR codes", Toast.LENGTH_SHORT
+                // trocar ts para i18n later, later ist noch
+                getString(R.string.camera_permission_is_required), Toast.LENGTH_SHORT
             ).show()
         }
     }
@@ -113,7 +113,7 @@ class ScanQRCodeFragment : Fragment(R.layout.fragment_scan_qr_code) {
                 Log.e(TAG, "Use case binding failed", exc)
                 Toast.makeText(
                     requireContext(),
-                    "Failed to start camera",
+                    getString(R.string.failed_to_start_camera),
                     Toast.LENGTH_SHORT
                 ).show()
             }

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="hello_blank_fragment">Olá de um fragmento em branco, opa, não deverias me ver!</string>
     <string name="first_name">Nome</string>
     <string name="last_name">Sobrenome</string>
     <string name="password">Senha</string>
@@ -17,4 +18,9 @@
     <string name="nav_menu">Menu</string>
     <string name="nav_account">Conta</string>
     <string name="welcome">Bem-vindo</string>
+    <string name="no_machine_id">Cadê o código da máquina?</string>
+    <string name="no_token_found">Nenhum token encontrado</string>
+    <string name="session_expired">Sessão expirou</string>
+    <string name="failed_to_fetch_menu">Houve um erro ao tentar requisitar o menu</string>
+    <string name="cached_cleared">Cache de menu limpa</string>
 </resources>

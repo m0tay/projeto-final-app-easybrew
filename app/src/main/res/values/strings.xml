@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name" translatable="false">EasyBrew</string>
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment" translatable="false">Hello blank fragment</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="first_name">First name</string>
     <string name="last_name">Last name</string>
     <string name="email" translatable="false">Email</string>
@@ -20,4 +20,9 @@
     <string name="nav_menu">Menu</string>
     <string name="nav_account">Account</string>
     <string name="welcome">Welcome</string>
+    <string name="no_machine_id">No machine ID provided</string>
+    <string name="no_token_found">No token found</string>
+    <string name="session_expired">Session expired</string>
+    <string name="failed_to_fetch_menu">Failed to fetch menu</string>
+    <string name="cached_cleared">Menu cache cleared</string>
 </resources>
