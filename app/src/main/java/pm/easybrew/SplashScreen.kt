@@ -50,6 +50,10 @@ class SplashScreen : AppCompatActivity() {
                     finish()
                 }
             }
+        } else {
+            Log.i(TAG, "No token found")
+            startActivity(Intent(applicationContext, RegisterLoginActivity::class.java))
+            finish()
         }
 
     }

@@ -4,6 +4,7 @@ package pm.easybrew
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.edit
@@ -37,10 +38,18 @@ class RegisterLoginActivity : AppCompatActivity() {
             lifecycleScope.launch {
                 try {
                     val response = RetrofitClient.api.register(RegisterRequest(email, password))
-                    Log.i(TAG, getMessage(response))
+                    val message = getMessage(response)
+                    if (response.isSuccessful) {
+                        Toast.makeText(applicationContext, "Registration successful! Please log in.", Toast.LENGTH_SHORT).show()
+                    } else {
+                        Toast.makeText(applicationContext, message, Toast.LENGTH_SHORT).show()
+                    }
+                    Log.i(TAG, message)
                 } catch (e: IOException) {
+                    Toast.makeText(applicationContext, "Network error. Please check your connection.", Toast.LENGTH_SHORT).show()
                     Log.e(TAG, "Network error", e)
                 } catch (e: Exception) {
+                    Toast.makeText(applicationContext, "An error occurred: ${e.message}", Toast.LENGTH_SHORT).show()
                     Log.e(TAG, e.message ?: "Unknown error", e)
                 }
             }
@@ -54,7 +63,6 @@ class RegisterLoginActivity : AppCompatActivity() {
                     val response = RetrofitClient.api.login(LoginRequest(email, password))
                     if (response.isSuccessful) {
                         Log.i(TAG, getMessage(response))
-
                         val intent = Intent(applicationContext, MainActivity::class.java)
                         val sharedPref = getSharedPreferences("easybrew_session", MODE_PRIVATE)
                         sharedPref.edit {
@@ -63,14 +71,19 @@ class RegisterLoginActivity : AppCompatActivity() {
                         startActivity(intent)
                         finish()
                     } else {
-                        Log.w(TAG, getMessage(response))
+                        val message = getMessage(response)
+                        Toast.makeText(applicationContext, message, Toast.LENGTH_SHORT).show()
+                        Log.w(TAG, message)
                     }
                 } catch (e: IOException) {
+                    Toast.makeText(applicationContext, "Network error. Please check your connection.", Toast.LENGTH_SHORT).show()
                     Log.e(TAG, "Network error", e)
                 } catch (e: Exception) {
+                    Toast.makeText(applicationContext, "An error occurred: ${e.message}", Toast.LENGTH_SHORT).show()
                     Log.e(TAG, e.message ?: "Unknown error", e)
                 }
             }
         }
+
     }
 }
