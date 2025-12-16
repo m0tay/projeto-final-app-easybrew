@@ -1,5 +1,6 @@
 package pm.easybrew
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -33,10 +34,15 @@ class MainActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, 0)
             insets
         }
+        val sharedPref = getSharedPreferences("easybrew_session", MODE_PRIVATE)
+        @SuppressLint("SetTextI18n")
+        binding.userBalanceTextView.text = "${sharedPref.getString("balance", "0.0")} €"
+        @SuppressLint("SetTextI18n")
+        binding.welcomeUserTextView.text = "${getString(R.string.welcome)}, ${sharedPref.getString("first_name", "oops")}"
 
         if (savedInstanceState == null) {
             // valid menu cache?
-            // TODO descomentar isty
+            // TODO: descomentar isto
             // val cachedMachineId = getCachedMachineId()
             // valor hardcode para testes pessoais
             val cachedMachineId = "62b2ea0a-cc67-11f0-bff7-001dd8b7204b"

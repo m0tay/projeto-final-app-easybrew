@@ -74,9 +74,13 @@ class RegisterLoginActivity : AppCompatActivity() {
                     if (response.isSuccessful) {
                         Log.i(TAG, getMessage(response))
                         val intent = Intent(applicationContext, MainActivity::class.java)
+                        val jwtPayload = RetrofitClient.getJWTPayload(response.body()?.jwt.toString())
                         val sharedPref = getSharedPreferences("easybrew_session", MODE_PRIVATE)
                         sharedPref.edit {
                             putString("token", response.body()?.jwt.toString())
+                            putString("user_id", jwtPayload!!["id"] as String?)
+                            putString("balance", jwtPayload["balance"] as String)
+                            putString("first_name", jwtPayload["first_name"] as String?)
                         }
                         startActivity(intent)
                         finish()

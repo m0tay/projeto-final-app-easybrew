@@ -2,7 +2,6 @@ package pm.easybrew.adapters
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.util.Base64
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -102,20 +101,10 @@ class BeveragesAdapter(
                 }
 
                 // Extracting from token user_id
-                val userId = try {
-                    val parts = token!!.split(".")
-                    if (parts.size == 3) {
-                        val payload = String(Base64.decode(parts[1], Base64.URL_SAFE))
-                        val json = Gson().fromJson(payload, Map::class.java)
-                        val data = json["data"] as? Map<*, *>
-                        data?.get("id") as? String
-                    } else null
-                } catch (e: Exception) {
-                    Log.e(TAG, "Failed to extract user ID from token", e)
-                    null
-                }
+                val jwtPayload = RetrofitClient.getJWTPayload(token!!)
 
-                if (userId == null) {
+
+                if (jwtPayload == null) {
                     Toast.makeText(
                         context,
                         context.getString(R.string.invalid_token),
@@ -127,7 +116,7 @@ class BeveragesAdapter(
                 val request = MakeRequest(
                     jwt = token!!,
                     machine_id = machineId,
-                    user_id = userId,
+                    user_id = jwtPayload["id"] as String,
                     beverage_id = beverage.id,
                     preparation = beverage.preparation
                 )
