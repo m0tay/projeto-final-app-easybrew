@@ -2,6 +2,8 @@ package pm.easybrew.api
 
 import pm.easybrew.objects.JWTResponse
 import pm.easybrew.objects.LoginRequest
+import pm.easybrew.objects.MakeRequest
+import pm.easybrew.objects.MakeResponse
 import pm.easybrew.objects.MenuRequest
 import pm.easybrew.objects.MenuResponse
 import pm.easybrew.objects.RegisterRequest
@@ -22,4 +24,7 @@ interface ApiService {
 
     @POST("machines/menu.php")
     suspend fun menu(@Body request: MenuRequest): Response<MenuResponse>
+
+    @POST("machines/make.php")
+    suspend fun make(@Body request: MakeRequest): Response<MakeResponse>
 }

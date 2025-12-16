@@ -50,7 +50,7 @@ class RecyclerViewMenuFragment : Fragment() {
 
         val rv = view.findViewById<RecyclerView>(R.id.recyclerViewMenu)
         rv?.layoutManager = LinearLayoutManager(requireContext())
-        adapter = BeveragesAdapter(beverages)
+        adapter = BeveragesAdapter(beverages, requireContext(), viewLifecycleOwner.lifecycleScope, machineId)
         rv?.adapter = adapter
 
         return view
@@ -82,7 +82,11 @@ class RecyclerViewMenuFragment : Fragment() {
             }
         } else {
             if (isAdded && context != null) {
-                Toast.makeText(requireContext(), getString(R.string.no_machine_id), Toast.LENGTH_SHORT)
+                Toast.makeText(
+                    requireContext(),
+                    getString(R.string.no_machine_id),
+                    Toast.LENGTH_SHORT
+                )
                     .show()
             }
         }

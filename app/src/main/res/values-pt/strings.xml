@@ -23,4 +23,8 @@
     <string name="session_expired">Sessão expirou</string>
     <string name="failed_to_fetch_menu">Houve um erro ao tentar requisitar o menu</string>
     <string name="cached_cleared">Cache de menu limpa</string>
+    <string name="invalid_token">Token inválido</string>
+    <string name="preparing">Preparando…</string>
+    <string name="beverage_prepared_successfully">Bebida preparada com sucesso</string>
+    <string name="failed_to_prepare_beverage">Falha ao preparar bebida</string>
 </resources>

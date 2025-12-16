@@ -36,7 +36,11 @@ class MainActivity : AppCompatActivity() {
 
         if (savedInstanceState == null) {
             // valid menu cache?
-            val cachedMachineId = getCachedMachineId()
+            // TODO descomentar isty
+            // val cachedMachineId = getCachedMachineId()
+            // valor hardcode para testes pessoais
+            val cachedMachineId = "62b2ea0a-cc67-11f0-bff7-001dd8b7204b"
+
             if (cachedMachineId != null) {
                 openRecyclerViewMenu(cachedMachineId)
             } else {
