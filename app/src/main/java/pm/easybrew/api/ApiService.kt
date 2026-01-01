@@ -1,5 +1,6 @@
 package pm.easybrew.api
 
+import pm.easybrew.objects.AddBalanceRequest
 import pm.easybrew.objects.JWTResponse
 import pm.easybrew.objects.LoginRequest
 import pm.easybrew.objects.MakeRequest
@@ -26,5 +27,8 @@ interface ApiService {
     suspend fun menu(@Body request: MenuRequest): Response<MenuResponse>
 
     @POST("machines/make.php")
-    suspend fun make(@Body request: MakeRequest): Response<MakeResponse>
+    suspend fun machineMake(@Body request: MakeRequest): Response<MakeResponse>
+
+    @POST("transactions/add.php")
+    suspend fun transactionAdd(@Body request: AddBalanceRequest): Response<JWTResponse>
 }

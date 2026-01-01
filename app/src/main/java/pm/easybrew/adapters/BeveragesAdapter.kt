@@ -122,7 +122,7 @@ class BeveragesAdapter(
                 )
 
                 val response = withContext(Dispatchers.IO) {
-                    RetrofitClient.api.make(request)
+                    RetrofitClient.api.machineMake(request)
                 }
 
                 if (response.isSuccessful) {
