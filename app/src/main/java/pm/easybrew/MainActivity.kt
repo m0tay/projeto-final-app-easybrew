@@ -45,7 +45,8 @@ class MainActivity : AppCompatActivity() {
             // TODO: descomentar isto
             // val cachedMachineId = getCachedMachineId()
             // valor hardcode para testes pessoais
-            val cachedMachineId = "62b2ea0a-cc67-11f0-bff7-001dd8b7204b"
+            // TODO: comentar isto
+            val cachedMachineId = "9dca5ff4-e020-11f0-82ae-001dd8b7204b"
 
             if (cachedMachineId != null) {
                 openRecyclerViewMenu(cachedMachineId)

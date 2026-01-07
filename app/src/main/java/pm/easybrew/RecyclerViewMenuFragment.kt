@@ -126,7 +126,12 @@ class RecyclerViewMenuFragment : Fragment() {
 
             if (!validateResp.isSuccessful) {
                 // invalid -> clear and redirect to login
-                sharedPref.edit { remove("token") }
+                sharedPref.edit { 
+                    remove("token")
+                    remove("user_id")
+                    remove("balance")
+                    remove("first_name")
+                }
                 Toast.makeText(
                     requireContext(),
                     getString(R.string.session_expired),
@@ -137,10 +142,22 @@ class RecyclerViewMenuFragment : Fragment() {
                 return
             }
 
-            val newToken = validateResp.body()?.jwt ?: token
-            if (newToken != token) {
+            // Atualizar token se retornou um novo
+            val newToken = validateResp.body()?.jwt
+            if (newToken != null && newToken != token) {
                 sharedPref.edit { putString("token", newToken) }
                 token = newToken
+            }
+            
+            // Atualizar dados do usuário do novo token
+            val tokenToUse = newToken ?: token
+            val jwtPayload = RetrofitClient.getJWTPayload(tokenToUse)
+            if (jwtPayload != null) {
+                sharedPref.edit {
+                    putString("user_id", jwtPayload["id"] as? String)
+                    putString("balance", jwtPayload["balance"] as? String)
+                    putString("first_name", jwtPayload["first_name"] as? String)
+                }
             }
 
             val response = withContext(Dispatchers.IO) {

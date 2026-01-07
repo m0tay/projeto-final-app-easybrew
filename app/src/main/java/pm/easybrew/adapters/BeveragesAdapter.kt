@@ -94,15 +94,16 @@ class BeveragesAdapter(
                     return@launch
                 }
 
-                val newToken = validateResp.body()?.jwt ?: token
-                if (newToken != token) {
+                // Atualizar token se retornou um novo
+                val newToken = validateResp.body()?.jwt
+                if (newToken != null && newToken != token) {
                     sharedPref.edit { putString("token", newToken) }
                     token = newToken
                 }
 
-                // Extracting from token user_id
-                val jwtPayload = RetrofitClient.getJWTPayload(token!!)
-
+                // Atualizar dados do usuário do novo token
+                val tokenToUse = newToken ?: token
+                val jwtPayload = RetrofitClient.getJWTPayload(tokenToUse!!)
 
                 if (jwtPayload == null) {
                     Toast.makeText(
@@ -112,9 +113,16 @@ class BeveragesAdapter(
                     ).show()
                     return@launch
                 }
+                
+                // Salvar dados do usuário atualizados no SharedPreferences
+                sharedPref.edit {
+                    putString("user_id", jwtPayload["id"] as? String)
+                    putString("balance", jwtPayload["balance"] as? String)
+                    putString("first_name", jwtPayload["first_name"] as? String)
+                }
 
                 val request = MakeRequest(
-                    jwt = token!!,
+                    jwt = tokenToUse!!,
                     machine_id = machineId,
                     user_id = jwtPayload["id"] as String,
                     beverage_id = beverage.id,
