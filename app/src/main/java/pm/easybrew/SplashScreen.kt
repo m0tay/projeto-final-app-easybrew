@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.util.Log
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.edit
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
@@ -37,15 +38,47 @@ class SplashScreen : AppCompatActivity() {
                     val response = RetrofitClient.api.validateToken(ValidateTokenRequest(token))
                     val intent = if (response.isSuccessful) {
                         Log.i(TAG, getMessage(response))
+                        
+                        // Atualizar token se retornou um novo
+                        val newToken = response.body()?.jwt
+                        if (newToken != null && newToken != token) {
+                            sharedPref.edit { putString("token", newToken) }
+                        }
+                        
+                        // Atualizar dados do usuário do novo token
+                        val tokenToUse = newToken ?: token
+                        val jwtPayload = RetrofitClient.getJWTPayload(tokenToUse)
+                        if (jwtPayload != null) {
+                            sharedPref.edit {
+                                putString("user_id", jwtPayload["id"] as? String)
+                                putString("balance", jwtPayload["balance"] as? String)
+                                putString("first_name", jwtPayload["first_name"] as? String)
+                            }
+                        }
+                        
                         Intent(applicationContext, MainActivity::class.java)
                     } else {
                         Log.w(TAG, getMessage(response))
+                        // Limpar dados da sessão
+                        sharedPref.edit { 
+                            remove("token")
+                            remove("user_id")
+                            remove("balance")
+                            remove("first_name")
+                        }
                         Intent(applicationContext, RegisterLoginActivity::class.java)
                     }
                     startActivity(intent)
                     finish()
                 } catch (e: Exception) {
                     Log.e(TAG, e.message ?: "Unknown error", e)
+                    // Limpar dados da sessão em caso de erro
+                    sharedPref.edit { 
+                        remove("token")
+                        remove("user_id")
+                        remove("balance")
+                        remove("first_name")
+                    }
                     startActivity(Intent(applicationContext, RegisterLoginActivity::class.java))
                     finish()
                 }
