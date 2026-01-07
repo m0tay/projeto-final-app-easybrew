@@ -36,8 +36,10 @@ class MainActivity : AppCompatActivity() {
             insets
         }
         val sharedPref = getSharedPreferences("easybrew_session", MODE_PRIVATE)
+        val balanceStr = sharedPref.getString("balance", "0.0")
+        val balance = balanceStr?.toDoubleOrNull() ?: 0.0
         @SuppressLint("SetTextI18n")
-        binding.userBalanceTextView.text = "${sharedPref.getString("balance", "0.0")} €"
+        binding.userBalanceTextView.text = "%.2f €".format(balance)
         @SuppressLint("SetTextI18n")
         binding.welcomeUserTextView.text = "${getString(R.string.welcome)}, ${sharedPref.getString("first_name", "oops")}"
 
@@ -92,7 +94,9 @@ class MainActivity : AppCompatActivity() {
     @SuppressLint("SetTextI18n")
     fun updateBalance() {
         val sharedPref = getSharedPreferences("easybrew_session", MODE_PRIVATE)
-        binding.userBalanceTextView.text = "${sharedPref.getString("balance", "0.0")} €"
+        val balanceStr = sharedPref.getString("balance", "0.0")
+        val balance = balanceStr?.toDoubleOrNull() ?: 0.0
+        binding.userBalanceTextView.text = "%.2f €".format(balance)
     }
 
     private fun openScanQRCodeFragment() {

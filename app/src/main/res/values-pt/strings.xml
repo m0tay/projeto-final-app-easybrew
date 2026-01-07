@@ -32,4 +32,10 @@
     <string name="value_must_be_positive">O valor tem de ser positivo</string>
     <string name="balance_added_successfully">Saldo adicionado com sucesso</string>
     <string name="error_adding_balance">Erro ao adicionar saldo</string>
+    <string name="insufficient_balance">Saldo insuficiente</string>
+    <string name="select_preparation">Selecione a preparação:</string>
+    <string name="preparation_hot">Quente</string>
+    <string name="preparation_warm">Morno</string>
+    <string name="preparation_iced">Gelado</string>
+    <string name="preparation_cold">Frio</string>
 </resources>

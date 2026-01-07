@@ -1,6 +1,7 @@
 package pm.easybrew.adapters
 
 import android.annotation.SuppressLint
+import android.app.AlertDialog
 import android.content.Context
 import android.util.Log
 import android.view.LayoutInflater
@@ -8,6 +9,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
+import android.widget.RadioButton
+import android.widget.RadioGroup
 import android.widget.TextView
 import android.widget.Toast
 import androidx.cardview.widget.CardView
@@ -18,6 +21,7 @@ import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import pm.easybrew.MainActivity
 import pm.easybrew.R
 import pm.easybrew.api.RetrofitClient
 import pm.easybrew.objects.Beverage
@@ -55,10 +59,17 @@ class BeveragesAdapter(
         holder.beveragePreparation.text = b.preparation
         holder.beveragePrice.text = "${b.price} €"
 
-        // Picasso.get() for image, not now, Awadama Fever
-
         holder.beverageBtnMake.setOnClickListener {
-            makeBeverage(b, holder.beverageBtnMake)
+            val sharedPref = context.getSharedPreferences("easybrew_session", Context.MODE_PRIVATE)
+            val balanceStr = sharedPref.getString("balance", "0.0")
+            val balance = balanceStr?.toDoubleOrNull() ?: 0.0
+            
+            if (balance < b.price) {
+                Toast.makeText(context, context.getString(R.string.insufficient_balance), Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+            
+            showPreparationDialog(b)
         }
     }
 
@@ -66,7 +77,63 @@ class BeveragesAdapter(
         return beverages.size
     }
 
-    private fun makeBeverage(beverage: Beverage, button: Button) {
+    private fun showPreparationDialog(beverage: Beverage) {
+        val preparations = beverage.preparation.split(",").map { it.trim() }
+        
+        val dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_preparation_selection, null)
+        val radioGroup = dialogView.findViewById<RadioGroup>(R.id.radioGroupPreparation)
+        val btnConfirm = dialogView.findViewById<Button>(R.id.btnConfirmOrder)
+        val txtBeverageName = dialogView.findViewById<TextView>(R.id.txtBeverageName)
+        val txtBeveragePrice = dialogView.findViewById<TextView>(R.id.txtBeveragePrice)
+        
+        txtBeverageName.text = beverage.name
+        txtBeveragePrice.text = "${beverage.price} €"
+        
+        var selectedPreparation = "hot"
+        preparations.forEach { prep ->
+            val radioButton = RadioButton(context)
+            radioButton.text = getPreparationTranslation(prep)
+            radioButton.tag = prep
+            radioGroup.addView(radioButton)
+            
+            if (prep == "hot" || (selectedPreparation == "hot" && radioGroup.childCount == 1)) {
+                radioButton.isChecked = true
+                selectedPreparation = prep
+            }
+            
+            radioButton.setOnCheckedChangeListener { _, isChecked ->
+                if (isChecked) {
+                    selectedPreparation = prep
+                }
+            }
+        }
+        
+        val dialog = AlertDialog.Builder(context)
+            .setView(dialogView)
+            .setCancelable(true)
+            .create()
+        
+        btnConfirm.setOnLongClickListener {
+            btnConfirm.isEnabled = false
+            makeBeverage(beverage, selectedPreparation, btnConfirm)
+            dialog.dismiss()
+            true
+        }
+        
+        dialog.show()
+    }
+
+    private fun getPreparationTranslation(preparation: String): String {
+        return when (preparation.lowercase()) {
+            "hot" -> context.getString(R.string.preparation_hot)
+            "warm" -> context.getString(R.string.preparation_warm)
+            "iced" -> context.getString(R.string.preparation_iced)
+            "cold" -> context.getString(R.string.preparation_cold)
+            else -> preparation.capitalize()
+        }
+    }
+
+    private fun makeBeverage(beverage: Beverage, preparation: String, button: Button) {
         val sharedPref = context.getSharedPreferences("easybrew_session", Context.MODE_PRIVATE)
         var token = sharedPref.getString("token", null)
 
@@ -94,14 +161,12 @@ class BeveragesAdapter(
                     return@launch
                 }
 
-                // Atualizar token se retornou um novo
                 val newToken = validateResp.body()?.jwt
                 if (newToken != null && newToken != token) {
                     sharedPref.edit { putString("token", newToken) }
                     token = newToken
                 }
 
-                // Atualizar dados do usuário do novo token
                 val tokenToUse = newToken ?: token
                 val jwtPayload = RetrofitClient.getJWTPayload(tokenToUse!!)
 
@@ -114,7 +179,6 @@ class BeveragesAdapter(
                     return@launch
                 }
                 
-                // Salvar dados do usuário atualizados no SharedPreferences
                 sharedPref.edit {
                     putString("user_id", jwtPayload["id"] as? String)
                     putString("balance", jwtPayload["balance"] as? String)
@@ -126,7 +190,7 @@ class BeveragesAdapter(
                     machine_id = machineId,
                     user_id = jwtPayload["id"] as String,
                     beverage_id = beverage.id,
-                    preparation = beverage.preparation
+                    preparation = preparation
                 )
 
                 val response = withContext(Dispatchers.IO) {
@@ -136,6 +200,18 @@ class BeveragesAdapter(
                 if (response.isSuccessful) {
                     val body = response.body()
                     Log.i(TAG, body?.message ?: "Beverage prepared success")
+                    
+                    val newBalance = body?.new_balance
+                    if (newBalance != null) {
+                        sharedPref.edit {
+                            putString("balance", newBalance.toString())
+                        }
+                        
+                        if (context is MainActivity) {
+                            context.updateBalance()
+                        }
+                    }
+                    
                     Toast.makeText(
                         context,
                         body?.message ?: context.getString(R.string.beverage_prepared_successfully),

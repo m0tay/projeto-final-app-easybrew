@@ -34,4 +34,10 @@
     <string name="value_must_be_positive">Value must be positive</string>
     <string name="balance_added_successfully">Balance added successfully</string>
     <string name="error_adding_balance">Error adding balance</string>
+    <string name="insufficient_balance">Insufficient balance</string>
+    <string name="select_preparation">Select preparation:</string>
+    <string name="preparation_hot">Hot</string>
+    <string name="preparation_warm">Warm</string>
+    <string name="preparation_iced">Iced</string>
+    <string name="preparation_cold">Cold</string>
 </resources>
