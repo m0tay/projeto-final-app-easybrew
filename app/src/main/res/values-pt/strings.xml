@@ -6,7 +6,7 @@
     <string name="password">Senha</string>
     <string name="btn_login">Entrar</string>
     <string name="btn_logout">Sair</string>
-    <string name="btn_update_account">Atualizar conta</string>
+    <string name="btn_update_account">Depositar</string>
     <string name="btn_beverage_order">Pedir</string>
     <string name="scan_qr_code">Ler código QR</string>
     <string name="failed_to_start_camera">Houve uma falha ao tentar abrir a câmera</string>
@@ -27,4 +27,9 @@
     <string name="preparing">Preparando…</string>
     <string name="beverage_prepared_successfully">Bebida preparada com sucesso</string>
     <string name="failed_to_prepare_beverage">Falha ao preparar bebida</string>
+    <string name="noValueProvided">Falta dizer o valor a adicionar</string>
+    <string name="invalid_value">Valor inválido</string>
+    <string name="value_must_be_positive">O valor tem de ser positivo</string>
+    <string name="balance_added_successfully">Saldo adicionado com sucesso</string>
+    <string name="error_adding_balance">Erro ao adicionar saldo</string>
 </resources>

@@ -8,7 +8,7 @@
     <string name="password">Password</string>
     <string name="btn_login">Login</string>
     <string name="btn_logout">Logout</string>
-    <string name="btn_update_account">Update account</string>
+    <string name="btn_update_account">Deposit</string>
     <string name="btn_beverage_order">Order</string>
     <string name="scan_qr_code">Scan QR Code</string>
     <string name="failed_to_start_camera">Failed to start camera</string>
@@ -29,4 +29,9 @@
     <string name="preparing">Preparing…</string>
     <string name="beverage_prepared_successfully">Beverage prepared successfully</string>
     <string name="failed_to_prepare_beverage">Failed to prepare beverage</string>
+    <string name="noValueProvided">No value to be deposited</string>
+    <string name="invalid_value">Invalid value</string>
+    <string name="value_must_be_positive">Value must be positive</string>
+    <string name="balance_added_successfully">Balance added successfully</string>
+    <string name="error_adding_balance">Error adding balance</string>
 </resources>

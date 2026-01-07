@@ -29,6 +29,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(binding.root)
+        
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, 0)
@@ -41,11 +42,9 @@ class MainActivity : AppCompatActivity() {
         binding.welcomeUserTextView.text = "${getString(R.string.welcome)}, ${sharedPref.getString("first_name", "oops")}"
 
         if (savedInstanceState == null) {
-            // valid menu cache?
-            // TODO: descomentar isto
+            // TODO: descomentar para usar cache de máquina
             // val cachedMachineId = getCachedMachineId()
-            // valor hardcode para testes pessoais
-            // TODO: comentar isto
+            // ID hardcoded para testes
             val cachedMachineId = "9dca5ff4-e020-11f0-82ae-001dd8b7204b"
 
             if (cachedMachineId != null) {
@@ -83,6 +82,17 @@ class MainActivity : AppCompatActivity() {
                 true
             } ?: false
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        updateBalance()
+    }
+
+    @SuppressLint("SetTextI18n")
+    fun updateBalance() {
+        val sharedPref = getSharedPreferences("easybrew_session", MODE_PRIVATE)
+        binding.userBalanceTextView.text = "${sharedPref.getString("balance", "0.0")} €"
     }
 
     private fun openScanQRCodeFragment() {
