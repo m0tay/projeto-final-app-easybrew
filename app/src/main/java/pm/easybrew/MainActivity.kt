@@ -23,13 +23,17 @@ class MainActivity : AppCompatActivity() {
         private lateinit var nav: BottomNavigationView
     }
 
-    private data class CachedMenu(val timestamp: Long, val machineId: String, val records: List<Beverage>)
+    private data class CachedMenu(
+        val timestamp: Long,
+        val machineId: String,
+        val records: List<Beverage>
+    )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(binding.root)
-        
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, 0)
@@ -41,13 +45,14 @@ class MainActivity : AppCompatActivity() {
         @SuppressLint("SetTextI18n")
         binding.userBalanceTextView.text = "%.2f €".format(balance)
         @SuppressLint("SetTextI18n")
-        binding.welcomeUserTextView.text = "${getString(R.string.welcome)}, ${sharedPref.getString("first_name", "oops")}"
+        binding.welcomeUserTextView.text =
+            "${getString(R.string.welcome)}, ${sharedPref.getString("first_name", "oops")}"
 
         if (savedInstanceState == null) {
-            // TODO: descomentar para usar cache de máquina
-            // val cachedMachineId = getCachedMachineId()
+            val cachedMachineId = getCachedMachineId()
             // ID hardcoded para testes
-            val cachedMachineId = "9dca5ff4-e020-11f0-82ae-001dd8b7204b"
+            // val cachedMachineId = "9dca5ff4-e020-11f0-82ae-001dd8b7204b"
+            // (wed 7 jan 23h18)
 
             if (cachedMachineId != null) {
                 openRecyclerViewMenu(cachedMachineId)
@@ -73,6 +78,7 @@ class MainActivity : AppCompatActivity() {
                         ScanQRCodeFragment()
                     }
                 }
+
                 R.id.navigation_account -> AccountFragment()
                 else -> null
             }
@@ -119,7 +125,7 @@ class MainActivity : AppCompatActivity() {
     private fun getCachedMachineId(): String? {
         val sharedPref = getSharedPreferences("easybrew_session", MODE_PRIVATE)
         val raw = sharedPref.getString(CACHE_KEY, null) ?: return null
-        
+
         val cached = try {
             Gson().fromJson(raw, CachedMenu::class.java)
         } catch (_: Exception) {

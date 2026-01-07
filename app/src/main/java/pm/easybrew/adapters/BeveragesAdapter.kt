@@ -94,6 +94,13 @@ class BeveragesAdapter(
             val radioButton = RadioButton(context)
             radioButton.text = getPreparationTranslation(prep)
             radioButton.tag = prep
+            radioButton.compoundDrawablePadding = 16
+            
+            val iconRes = getPreparationIcon(prep)
+            if (iconRes != null) {
+                radioButton.setCompoundDrawablesWithIntrinsicBounds(iconRes, 0, 0, 0)
+            }
+            
             radioGroup.addView(radioButton)
             
             if (prep == "hot" || (selectedPreparation == "hot" && radioGroup.childCount == 1)) {
@@ -130,6 +137,14 @@ class BeveragesAdapter(
             "iced" -> context.getString(R.string.preparation_iced)
             "cold" -> context.getString(R.string.preparation_cold)
             else -> preparation.capitalize()
+        }
+    }
+
+    private fun getPreparationIcon(preparation: String): Int? {
+        return when (preparation.lowercase()) {
+            "hot", "warm" -> R.drawable.temp_hot
+            "iced", "cold" -> R.drawable.temp_iced
+            else -> null
         }
     }
 
