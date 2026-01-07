@@ -63,7 +63,6 @@ class RecyclerViewMenuFragment : Fragment() {
         binding.btnRescan.setOnLongClickListener {
             if (!isAdded || activity == null || context == null) return@setOnLongClickListener true
 
-            // muss das so sein?
             val intent = Intent(requireContext(), CleanRecyclerMenuReceiver::class.java)
             requireContext().sendBroadcast(intent)
             val activity = requireActivity()
@@ -104,7 +103,7 @@ class RecyclerViewMenuFragment : Fragment() {
             return
         }
 
-        // Fetch fresh menu instead, Sis. Anger
+        // Fetch fresh menu
         if (!isAdded || activity == null) return
         val sharedPref = requireActivity().getSharedPreferences("easybrew_session", MODE_PRIVATE)
         var token = sharedPref.getString("token", null)

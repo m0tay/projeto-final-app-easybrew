@@ -15,21 +15,24 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:gravity="center"
             android:orientation="vertical">
 
             <EditText
-                android:id="@+id/firstNameEdit"
-                android:layout_width="match_parent"
+                android:id="@+id/editAddBalance"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:ems="10"
-                android:hint="@string/first_name"
-                android:inputType="text" />
+                android:gravity="center_horizontal|center_vertical"
+                android:hint="5 €"
+                android:inputType="numberDecimal" />
 
             <Button
                 android:id="@+id/btnUpdateAccount"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/btn_update_account" />
+
         </LinearLayout>
 
         <Button
